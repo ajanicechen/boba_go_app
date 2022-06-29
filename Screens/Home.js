@@ -1,9 +1,10 @@
-import { Text, View, FlatList } from 'react-native';
+import { Text, View, FlatList, TouchableOpacity } from 'react-native';
 import { useState, useEffect } from 'react';
 import Style from '../Styles/Style.js'
+import { NavigationHelpersContext } from '@react-navigation/native';
 
 //loads home
-export default function HomeScreen({currentTheme}) {
+export default function HomeScreen({currentTheme, navigation}) {
   // console.log(Settings)
 
   const [list, setList] = useState([])
@@ -34,11 +35,18 @@ export default function HomeScreen({currentTheme}) {
     setList(data)
   }
 
+  // console.log(list)
+
   useEffect(() => {loadJSON()}, [])
 
   const Item = ({ name }) => (
     <View style={styles.item}>
-      <Text style={styles.name}>{name}</Text>
+      <TouchableOpacity onPress={()=> navigation.navigate("Map", {
+        "latitude" : name.lat,
+        "longitude" : name.long
+      })}>
+        <Text style={styles.name}>{name}</Text>
+      </TouchableOpacity>
     </View>
   );
   
@@ -49,6 +57,7 @@ export default function HomeScreen({currentTheme}) {
       <Text style={themeH1Style}>Welcome to Boba Go!</Text>
       <Text style={themeH2Style}>Where would you wanna </Text>
       <Text style={themeH2Style}>go today uwu?</Text>
+      {/* create flatlist with hotspot items */}
       <FlatList data={list} renderItem={renderItem} keyExtractor={item => item.name} />
     </View>
   );

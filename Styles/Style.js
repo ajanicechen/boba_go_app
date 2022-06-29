@@ -54,5 +54,15 @@ export default StyleSheet.create({
       name:{
         color:  '#9D8189',
         fontWeight: 'bold'
-      }
+      },
+      input: {
+        height: 40,
+        width: 300,
+        margin: 12,
+        borderWidth: 1,
+        borderColor: '#9D8189',
+        backgroundColor: '#D8E2DC',
+        borderRadius: 10,
+        padding: 10,
+      },
 });
