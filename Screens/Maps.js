@@ -11,6 +11,8 @@ import Style from '../Styles/Style.js'
 
 //loads map
 export default function MapScreen({route, navigation}) {
+
+    let msg
     const [location, setLocation] = useState(null);
     const [markers, setMarkers] = useState([])
     const [errorMsg, setErrorMsg] = useState(null);
@@ -90,23 +92,27 @@ export default function MapScreen({route, navigation}) {
         if (status !== 'granted') {
           setErrorMsg('Permission to access location was denied');
           return;
+        } else {
+          setErrorMsg('please give us a moment to find ur location...');
         }
   
         let location = await Location.getCurrentPositionAsync({});
         setLocation(location);
+
       })();
     }, []);
   
-    let text = 'please give us a moment to find ur location...';
+    //message for view
+    // let msg = 'please give us a moment to find ur location...'
     if (location == null) {
-        text = text;
+        msg = errorMsg
     } else {
-        text = "Location Found"
+        msg = "location found!"
     }
 
     return (
       <View style={styles.container}>
-      <Text style={styles.text}>{text}</Text>        
+      <Text style={styles.text}>{ msg }</Text>        
       <MapView style={styles.map}
       showsUserLocation
       region={ region}>
