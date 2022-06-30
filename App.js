@@ -27,6 +27,35 @@ export default function App() {
 
   //useState for theme, default on cottonCandy
   const [currentTheme, setCurrentTheme] = useState('cottonCandy');
+  const [markers, setMarkers] = useState([])
+
+  //GET Request
+  const myHeadersGET = new Headers()
+  myHeadersGET.append('Accept', 'application/json')
+
+  const myInitGET = {
+    method: 'GET',
+    headers: myHeadersGET
+  }
+
+  //api url
+  const apiUrl = 'https://stud.hosted.hr.nl/0999525/boba_marker_locations.json'
+
+  //fetch api
+  const loadJSON = () => {
+    fetch(apiUrl, myInitGET)
+    .then(res => res.json())
+    .then(data => updateData(data))
+    .catch(error => console.log(error))
+  }
+
+  //put markers in an array named markers that we makde earlier
+  function updateData(data){
+    setMarkers(data)
+  }
+
+  //useEffect to initialize fetch
+  useEffect(() => {loadJSON()}, [])
 
   //get theme from async storage
   const getTheme = async () => {
@@ -95,10 +124,11 @@ export default function App() {
           headerTintColor: currentTheme == 'cottonCandy' ? '#F4ACB7' : '#C1B8BB'
         })}
       >
-        <Tab.Screen name="Home">{(props) => <Home {...props} storeTheme={ storeTheme } currentTheme={ currentTheme }/>}</Tab.Screen>
-        <Tab.Screen name="Map">{(props) => <Map {...props} storeTheme={ storeTheme } currentTheme={ currentTheme }/>}</Tab.Screen>
+        <Tab.Screen name="Home">{(props) => <Home {...props} storeTheme={ storeTheme } currentTheme={ currentTheme } markers={ markers }/>}</Tab.Screen>
+        <Tab.Screen name="Map">{(props) => <Map {...props} storeTheme={ storeTheme } currentTheme={ currentTheme } markers={ markers }/>}</Tab.Screen>
         <Tab.Screen name="Notes">{(props) => <Notes {...props} storeTheme={ storeTheme } currentTheme={ currentTheme }/>}</Tab.Screen>
         <Tab.Screen name="Settings">{(props) => <Settings {...props} storeTheme={ storeTheme } currentTheme={ currentTheme }/>}</Tab.Screen>
+
       </Tab.Navigator>
     </NavigationContainer>
   );
