@@ -1,7 +1,6 @@
 import { Text, View, FlatList, TouchableOpacity } from 'react-native';
 import { useState, useEffect } from 'react';
 import Style from '../Styles/Style.js'
-import { NavigationHelpersContext } from '@react-navigation/native';
 
 //loads home
 export default function HomeScreen({currentTheme, navigation}) {

@@ -55,7 +55,7 @@ export default function MapScreen({route, navigation}) {
 
     //use effect for different ways to handle
     useEffect(() => {
-      //when pressing the map tab on navbar, show current location
+      //when pressing the map tab on navbar, show current user location
       navigation.addListener('tabPress', (e) => {
           if (location) {
               setRegion({

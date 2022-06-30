@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "boba_go_app",
-    "slug": "boba_go_app",
+    "name": "BobaGo",
+    "slug": "bobago",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -28,6 +28,7 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "description": ""
   }
 }

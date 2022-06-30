@@ -4,10 +4,11 @@ import Style from '../Styles/Style.js'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
-export default function SettingsScreen({currentTheme}) {
+export default function SettingsScreen({currentTheme, route}) {
 
    const [text, setText] = useState("")   //useState for text input for notes
    const [notes, setNotes] = useState([]) //usestate for all notes as an array
+   const [name, setName] = useState(route.params?.marker.name) //useState for marker name
 
    //get notes from local storage
    const getNotes = async () => {
@@ -16,6 +17,7 @@ export default function SettingsScreen({currentTheme}) {
          if (notes !== null) {
             setNotes(JSON.parse(storedNotes))
          } else {
+
          }
       } catch (err) {
          console.log(err)
@@ -35,13 +37,22 @@ export default function SettingsScreen({currentTheme}) {
 
    //function to submit a note
    const submitNote = (text) => {
-      setNotes([{ "note": text}, ...notes]) //still need to add an id to it 
+      if(text !== ""){
+         setNotes([{ "id": Math.random().toString(), "name": name, "note": text}, ...notes]) 
+      } 
    }
 
    //function to delete a note
-   const deleteNote = (note) => {
-
+   const deleteNote = (id) => {
+      setNotes((oldNotes) => {
+         return oldNotes.filter(note => note.id != id)
+      })
    }
+
+   useEffect(() => {
+      //when someone navigates through Marker on the map
+      setName(route.params?.marker.name)
+  }, [route, route.params?.marker.name])
 
    //useEffect to get notes once
    useEffect(() => { getNotes() }, [])
@@ -53,18 +64,19 @@ export default function SettingsScreen({currentTheme}) {
    const themeContainerStyle = currentTheme === 'cottonCandy' ? styles.container.cottonCandy : styles.container.matcha;
 
    // Create the notes for the flatlist
-   const Notes = ({ text }) => (
+   const Note = ({ text, name, id }) => (
       <View style={styles.item}>
-         <Text style={styles.name}>{text}</Text>
+         <Text style={styles.name}>{ [name, ": "] }</Text>
+         <Text style={styles.name}>{ text }</Text>
             <Ionicons
                name="close-circle"
                color= "#9D8189"
                size={25}
-               onPress={() => deleteNote(notes)} />
+               onPress={() => deleteNote(id)} />
       </View>
    );
  
-   const renderNote = ({ item }) => <Notes text={item.note} />
+   const renderNote = ({ item }) => <Note id={item.id} name={item.name} text={item.note} />
 
    return (
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
