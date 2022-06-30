@@ -1,4 +1,4 @@
-import { Text, SafeAreaView, TextInput, Button, FlatList, View, TouchableWithoutFeedback, Keyboard, Touchable, TouchableOpacity } from 'react-native';
+import { Text, SafeAreaView, TextInput, Button, FlatList, View, TouchableWithoutFeedback, Keyboard, Share, TouchableOpacity } from 'react-native';
 import { useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -51,11 +51,27 @@ export default function SettingsScreen({currentTheme, route}) {
       } 
    }
 
+   const editNote = (name, text) => {
+      console.log(name, text)
+   }
+
    //function to delete a note
    const deleteNote = (id) => {
       setNotes((oldNotes) => {
          return oldNotes.filter(note => note.id != id)
       })
+   }
+
+   //function for sharing notes
+   const shareNote = async (name, text) => {
+      try {
+         const result = await Share.share({
+         message:
+            `${name} | note: ${text}`,
+         });
+      } catch (error) {
+         alert(error.message);
+      }
    }
 
    useEffect(() => {
@@ -72,13 +88,20 @@ export default function SettingsScreen({currentTheme, route}) {
    // Create the notes for the flatlist
    const Note = ({ text, name, id }) => (
       <View style={style.item}>
-         <Text style={style.name}>{ [name, ": "] }</Text>
-         <Text style={style.name}>{ text }</Text>
+         <TouchableOpacity onPress={editNote(name, text)}>
+            <Text style={style.name}>{ [name, ": "] }</Text>
+            <Text style={style.name}>{ text }</Text>
+         </TouchableOpacity>
             <Ionicons
                name="close-circle"
                color= "#9D8189"
                size={25}
                onPress={() => deleteNote(id)} />
+            <Ionicons 
+               name="share-outline"
+               color= "#9D8189"
+               size={25}
+               onPress={() => shareNote(name, text)}/>
       </View>
    );
  
