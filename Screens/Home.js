@@ -22,8 +22,10 @@ export default function HomeScreen({currentTheme, navigation}) {
     headers: myHeadersGET
   }
 
+  //api url
   const apiUrl = 'https://stud.hosted.hr.nl/0999525/boba_marker_locations.json'
 
+  //fetch api
   const loadJSON = () => {
     fetch(apiUrl, myInitGET)
     .then(res => res.json())
@@ -31,16 +33,17 @@ export default function HomeScreen({currentTheme, navigation}) {
     .catch(error => console.log(error))
   }
 
+  //set all marker location in list array we made earlier
   function updateData(data){
     setList(data)
   }
 
-  // console.log(list)
-
+  //initializes fetch
   useEffect(() => {loadJSON()}, [])
 
   const Item = ({ name, lat, long }) => (
     <View style={styles.item}>
+      {/* navigate to the marker on the map by pressing each list item */}
       <TouchableOpacity onPress={()=> navigation.navigate("Map", {
         "latitude" : lat,
         "longitude" : long
