@@ -1,16 +1,20 @@
 import { Text, View, FlatList, TouchableOpacity } from 'react-native';
 import { useState, useEffect } from 'react';
-import Style from '../Styles/Style.js'
+import CottonCandy from '../Styles/CottonCandy.js'
+import MatchaLuvr from '../Styles/MatchaLuvr.js'
 
 //loads home
 export default function HomeScreen({currentTheme, navigation}) {
 
-  const [list, setList] = useState([])
+  let style
 
-  //if statements for stylesheet
-  const themeH1Style = currentTheme === 'cottonCandy' ? styles.h1.cottonCandy : styles.h1.matcha;
-  const themeH2Style = currentTheme === 'cottonCandy' ? styles.h2.cottonCandy : styles.h2.matcha;
-  const themeContainerStyle = currentTheme === 'cottonCandy' ? styles.container.cottonCandy : styles.container.matcha;
+  if(currentTheme === 'cottonCandy'){
+    style = CottonCandy
+  } else {
+    style = MatchaLuvr
+  }
+
+  const [list, setList] = useState([])
 
   //GET Request
   const myHeadersGET = new Headers()
@@ -41,13 +45,13 @@ export default function HomeScreen({currentTheme, navigation}) {
   useEffect(() => {loadJSON()}, [])
 
   const Item = ({ name, lat, long }) => (
-    <View style={styles.item}>
+    <View style={style.item}>
       {/* navigate to the marker on the map by pressing each list item */}
       <TouchableOpacity onPress={()=> navigation.navigate("Map", {
         "latitude" : lat,
         "longitude" : long
       })}>
-        <Text style={styles.name}>{name}</Text>
+        <Text style={style.name}>{name}</Text>
       </TouchableOpacity>
     </View>
   );
@@ -55,15 +59,15 @@ export default function HomeScreen({currentTheme, navigation}) {
   const renderItem = ({ item }) => <Item name={item.name} lat={item.lat} long={item.long} />;
 
   return (
-    <View style={themeContainerStyle}>
-      <Text style={themeH1Style}>Welcome to Boba Go!</Text>
-      <Text style={themeH2Style}>Where would you wanna </Text>
-      <Text style={themeH2Style}>go today uwu?</Text>
+    <View style={style.container}>
+      <Text style={style.h1}>Welcome to Boba Go!</Text>
+      <Text style={style.h2}>Where would you wanna </Text>
+      <Text style={style.h2}>go today uwu?</Text>
       {/* create flatlist with hotspot items */}
       <FlatList data={list} renderItem={renderItem} keyExtractor={item => item.name} />
     </View>
   );
 }
 
-const styles = Style
+// const styles = Style
 
