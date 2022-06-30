@@ -1,20 +1,24 @@
 import { Text, View } from 'react-native';
 import {Picker} from '@react-native-picker/picker';
-import Style from '../Styles/Style.js'
+import CottonCandy from '../Styles/CottonCandy.js'
+import MatchaLuvr from '../Styles/MatchaLuvr.js'
 
 //loads settings
 export default function SettingsScreen({storeTheme, currentTheme}) {
 
-  // const [selectedTheme, setSelectedTheme] = useState('cottonCandy');
+   let style
 
-   const themeTextStyle = currentTheme === 'cottonCandy' ? styles.h1.cottonCandy : styles.h1.matcha;
-   const themeContainerStyle = currentTheme === 'cottonCandy' ? styles.container.cottonCandy : styles.container.matcha;
+   if(currentTheme === 'cottonCandy'){
+     style = CottonCandy
+   } else {
+     style = MatchaLuvr
+   }
 
    return (
-      <View style={themeContainerStyle}>
-         <Text style={themeTextStyle}>Select a Theme!</Text>
+      <View style={style.container}>
+         <Text style={style.h1}>Select a Theme!</Text>
          <Picker
-            style={styles.picker}
+            style={style.picker}
             selectedValue={currentTheme}
             onValueChange={(currentTheme, itemIndex) =>
             {storeTheme(currentTheme)}}>
@@ -25,5 +29,4 @@ export default function SettingsScreen({storeTheme, currentTheme}) {
    );
 }
 
-const styles = Style
   

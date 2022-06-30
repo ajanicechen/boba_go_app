@@ -1,14 +1,23 @@
 import { Text, SafeAreaView, TextInput, Button, FlatList, View, TouchableWithoutFeedback, Keyboard, Touchable, TouchableOpacity } from 'react-native';
 import { useState, useEffect } from 'react';
-import Style from '../Styles/Style.js'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import CottonCandy from '../Styles/CottonCandy.js'
+import MatchaLuvr from '../Styles/MatchaLuvr.js'
 
 export default function SettingsScreen({currentTheme, route}) {
 
    const [text, setText] = useState("")   //useState for text input for notes
    const [notes, setNotes] = useState([]) //usestate for all notes as an array
    const [name, setName] = useState(route.params?.marker.name) //useState for marker name
+
+   let style
+
+   if(currentTheme === 'cottonCandy'){
+     style = CottonCandy
+   } else {
+     style = MatchaLuvr
+   }
 
    //get notes from local storage
    const getNotes = async () => {
@@ -60,14 +69,11 @@ export default function SettingsScreen({currentTheme, route}) {
    //useEffect to store notes every time notes are set
    useEffect(() => { storeNotes() }, [notes])
 
-   const themeTextStyle = currentTheme === 'cottonCandy' ? styles.h1.cottonCandy : styles.h1.matcha;
-   const themeContainerStyle = currentTheme === 'cottonCandy' ? styles.container.cottonCandy : styles.container.matcha;
-
    // Create the notes for the flatlist
    const Note = ({ text, name, id }) => (
-      <View style={styles.item}>
-         <Text style={styles.name}>{ [name, ": "] }</Text>
-         <Text style={styles.name}>{ text }</Text>
+      <View style={style.item}>
+         <Text style={style.name}>{ [name, ": "] }</Text>
+         <Text style={style.name}>{ text }</Text>
             <Ionicons
                name="close-circle"
                color= "#9D8189"
@@ -80,10 +86,10 @@ export default function SettingsScreen({currentTheme, route}) {
 
    return (
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-         <SafeAreaView style={themeContainerStyle}>
-            <Text style={themeTextStyle}>Leave a note!</Text>
+         <SafeAreaView style={style.container}>
+            <Text style={style.h1}>Leave a note!</Text>
             <TextInput
-            style={styles.input}
+            style={style.input}
             onChangeText={setText}
             value={text}
             />
@@ -99,6 +105,4 @@ export default function SettingsScreen({currentTheme, route}) {
       
    );
 }
-
-const styles = Style
   

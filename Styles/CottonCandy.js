@@ -44,4 +44,8 @@ export default StyleSheet.create({
       borderRadius: 10,
       padding: 10,
    },
+   msg: {
+      fontSize: 18,
+      textAlign: 'center',
+    },
 });

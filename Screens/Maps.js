@@ -1,21 +1,30 @@
 import { StatusBar } from 'expo-status-bar';
-import { Text, View } from 'react-native';
+import { Text, View, } from 'react-native';
 import MapView from 'react-native-maps';
 import { Marker } from 'react-native-maps';
 import * as Location from 'expo-location';
 import { useState, useEffect } from 'react';
 import myMarker from '../assets/marker.png';
 import matchaMarker from '../assets/matcha_marker.png';
-import Style from '../Styles/Style.js'
+import CottonCandy from '../Styles/CottonCandy.js'
+import MatchaLuvr from '../Styles/MatchaLuvr.js'
 
 
 //loads map
-export default function MapScreen({route, navigation}) {
+export default function MapScreen({route, navigation, currentTheme}) {
 
-    let msg
     const [location, setLocation] = useState(null);
     const [markers, setMarkers] = useState([])
     const [errorMsg, setErrorMsg] = useState(null);
+    
+    let msg
+    let style
+
+    if(currentTheme === 'cottonCandy'){
+      style = CottonCandy
+    } else {
+      style = MatchaLuvr
+    }
 
     //lowkey initial region
     const [region, setRegion] = useState({
@@ -95,7 +104,6 @@ export default function MapScreen({route, navigation}) {
         } else {
           setErrorMsg('please give us a moment to find ur location...');
         }
-  
         let location = await Location.getCurrentPositionAsync({});
         setLocation(location);
 
@@ -103,17 +111,16 @@ export default function MapScreen({route, navigation}) {
     }, []);
   
     //message for view
-    // let msg = 'please give us a moment to find ur location...'
     if (location == null) {
-        msg = errorMsg
-    } else {
-        msg = "location found!"
-    }
+      msg = errorMsg
+    } //else {
+      //msg = "Location found!"
+    //}
 
     return (
-      <View style={styles.container}>
-      <Text style={styles.text}>{ msg }</Text>        
-      <MapView style={styles.map}
+      <View style={style.container}>
+      <Text style={style.msg}>{msg}</Text>
+      <MapView style={style.map}
       showsUserLocation
       region={ region}>
         {//map through all marker locations
@@ -125,5 +132,3 @@ export default function MapScreen({route, navigation}) {
       </View>
     );
   }
-
-const styles = Style

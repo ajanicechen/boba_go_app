@@ -69,5 +69,4 @@ export default function HomeScreen({currentTheme, navigation}) {
   );
 }
 
-// const styles = Style
 

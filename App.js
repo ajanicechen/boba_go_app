@@ -25,8 +25,10 @@ const Tab = createBottomTabNavigator();
 
 export default function App() {
 
+  //useState for theme, default on cottonCandy
   const [currentTheme, setCurrentTheme] = useState('cottonCandy');
 
+  //get theme from async storage
   const getTheme = async () => {
     try {
       const theme = await AsyncStorage.getItem('theme')
@@ -42,6 +44,7 @@ export default function App() {
     }
   }
 
+  //store theme to async storage
   const storeTheme = (newTheme) => {
     try {
       AsyncStorage.setItem('theme', newTheme)
@@ -53,6 +56,7 @@ export default function App() {
     }
   }
 
+  //useEffect to initialize getting theme
   useEffect(() => {getTheme()}, [])
 
   return (
