@@ -6,8 +6,8 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 
 export default function SettingsScreen({currentTheme}) {
 
-   const [text, setText] = useState("")
-   const [notes, setNotes] = useState([])
+   const [text, setText] = useState("")   //useState for text input for notes
+   const [notes, setNotes] = useState([]) //usestate for all notes as an array
 
    //get notes from local storage
    const getNotes = async () => {
@@ -33,10 +33,12 @@ export default function SettingsScreen({currentTheme}) {
       }
    }
 
+   //function to submit a note
    const submitNote = (text) => {
-      setNotes([{"id": , "note": text}, ...notes])
+      setNotes([{"id": id, "note": text}, ...notes])
    }
 
+   //function to delete a note
    const deleteNote = (note) => {
       setNotes((prevNotes) => {
          return prevNotes.filter(note)

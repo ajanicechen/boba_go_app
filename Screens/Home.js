@@ -5,10 +5,10 @@ import { NavigationHelpersContext } from '@react-navigation/native';
 
 //loads home
 export default function HomeScreen({currentTheme, navigation}) {
-  // console.log(Settings)
 
   const [list, setList] = useState([])
 
+  //if statements for stylesheet
   const themeH1Style = currentTheme === 'cottonCandy' ? styles.h1.cottonCandy : styles.h1.matcha;
   const themeH2Style = currentTheme === 'cottonCandy' ? styles.h2.cottonCandy : styles.h2.matcha;
   const themeContainerStyle = currentTheme === 'cottonCandy' ? styles.container.cottonCandy : styles.container.matcha;
@@ -39,18 +39,18 @@ export default function HomeScreen({currentTheme, navigation}) {
 
   useEffect(() => {loadJSON()}, [])
 
-  const Item = ({ name }) => (
+  const Item = ({ name, lat, long }) => (
     <View style={styles.item}>
       <TouchableOpacity onPress={()=> navigation.navigate("Map", {
-        "latitude" : name.lat,
-        "longitude" : name.long
+        "latitude" : lat,
+        "longitude" : long
       })}>
         <Text style={styles.name}>{name}</Text>
       </TouchableOpacity>
     </View>
   );
   
-  const renderItem = ({ item }) => <Item name={item.name} />;
+  const renderItem = ({ item }) => <Item name={item.name} lat={item.lat} long={item.long} />;
 
   return (
     <View style={themeContainerStyle}>

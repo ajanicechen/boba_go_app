@@ -10,10 +10,18 @@ import Style from '../Styles/Style.js'
 
 
 //loads map
-export default function MapScreen() {
+export default function MapScreen({route, navigation}) {
     const [location, setLocation] = useState(null);
     const [markers, setMarkers] = useState([])
     const [errorMsg, setErrorMsg] = useState(null);
+
+    //lowkey initial region
+    const [region, setRegion] = useState({
+      latitude: 51.916900,
+      longitude: 4.478560,
+      latitudeDelta: 0.0922,
+      longitudeDelta: 0.0421
+    })
 
     //GET Request
     const myHeadersGET = new Headers()
@@ -38,6 +46,38 @@ export default function MapScreen() {
     }
 
     useEffect(() => {loadJSON()}, [])
+
+    useEffect(() => {
+      //when pressing the map tab on navbar, show current location
+      navigation.addListener('tabPress', (e) => {
+          if (location) {
+              setRegion({
+                  latitude: location.coords.latitude,
+                  longitude: location.coords.longitude,
+                  latitudeDelta: 0.0922,
+                  longitudeDelta: 0.0421
+              })
+          }
+      })
+      //when someone navigates through the list
+      if (route.params?.latitude) {
+          setRegion({
+              latitude: route.params.latitude,
+              longitude: route.params.longitude,
+              latitudeDelta: 0.00922,
+              longitudeDelta: 0.00421
+          })
+      }
+      //when current location is found, show current location
+      else if (location) {
+          setRegion({
+              latitude: location.coords.latitude,
+              longitude: location.coords.longitude,
+              latitudeDelta: 0.00922,
+              longitudeDelta: 0.00421
+          })
+      }
+  }, [location, route.params?.latitude, route])
   
     useEffect(() => {
       (async () => {
@@ -58,22 +98,20 @@ export default function MapScreen() {
     } else {
         text = "Location Found"
     }
-  
-    // console.log(location)
-  
+
     return (
       <View style={styles.container}>
       <Text style={styles.text}>{text}</Text>        
       <MapView style={styles.map}
       showsUserLocation
-      region={{
+      region={ region
         //it takes a while for user location to load so we write an if statement
         //if user location is loaded, set user coords, else a hardcoded coord
-        latitude: location ? location.coords.latitude : 51.901241339389706,
-        longitude: location ? location.coords.longitude : 4.261946355786722,
-        latitudeDelta: 0.00922,
-        longitudeDelta: 0.00421,
-      }}>
+        // latitude: location ? location.coords.latitude : 51.901241339389706,
+        // longitude: location ? location.coords.longitude : 4.261946355786722,
+        // latitudeDelta: 0.00922,
+        // longitudeDelta: 0.00421, 
+      }>
         {//map through all marker locations
         markers.map((marker, index) => (
         <Marker coordinate={{ latitude : marker.lat , longitude : marker.long }} key={marker.name} image={myMarker}/>
