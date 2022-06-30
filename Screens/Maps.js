@@ -1,4 +1,3 @@
-import { StatusBar } from 'expo-status-bar';
 import { Text, View, } from 'react-native';
 import MapView from 'react-native-maps';
 import { Marker } from 'react-native-maps';
@@ -11,10 +10,9 @@ import MatchaLuvr from '../Styles/MatchaLuvr.js'
 
 
 //loads map
-export default function MapScreen({route, navigation, currentTheme}) {
+export default function MapScreen({route, navigation, currentTheme, markers}) {
 
     const [location, setLocation] = useState(null);
-    const [markers, setMarkers] = useState([])
     const [errorMsg, setErrorMsg] = useState(null);
     
     let msg
@@ -33,34 +31,6 @@ export default function MapScreen({route, navigation, currentTheme}) {
       latitudeDelta: 0.0922,
       longitudeDelta: 0.0421
     })
-
-    //GET Request
-    const myHeadersGET = new Headers()
-    myHeadersGET.append('Accept', 'application/json')
-
-    const myInitGET = {
-      method: 'GET',
-      headers: myHeadersGET
-    }
-
-    //api url
-    const apiUrl = 'https://stud.hosted.hr.nl/0999525/boba_marker_locations.json'
-
-    //fetch api
-    const loadJSON = () => {
-      fetch(apiUrl, myInitGET)
-      .then(res => res.json())
-      .then(data => updateData(data))
-      .catch(error => console.log(error))
-    }
-
-    //put markers in useState markers array that uv made before
-    function updateData(data){
-      setMarkers(data)
-    }
-
-    //use effect to initiate ur fetch 
-    useEffect(() => {loadJSON()}, [])
 
     //use effect for different ways to handle
     useEffect(() => {
