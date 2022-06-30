@@ -35,14 +35,12 @@ export default function SettingsScreen({currentTheme}) {
 
    //function to submit a note
    const submitNote = (text) => {
-      setNotes([{"id": id, "note": text}, ...notes])
+      setNotes([{ "note": text}, ...notes]) //still need to add an id to it 
    }
 
    //function to delete a note
    const deleteNote = (note) => {
-      setNotes((prevNotes) => {
-         return prevNotes.filter(note)
-     })
+
    }
 
    //useEffect to get notes once
@@ -70,7 +68,7 @@ export default function SettingsScreen({currentTheme}) {
 
    return (
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-         <View style={themeContainerStyle}>
+         <SafeAreaView style={themeContainerStyle}>
             <Text style={themeTextStyle}>Leave a note!</Text>
             <TextInput
             style={styles.input}
@@ -84,7 +82,7 @@ export default function SettingsScreen({currentTheme}) {
                data={notes}
                renderItem={renderNote}
             />
-         </View>
+         </SafeAreaView>
       </TouchableWithoutFeedback>
       
    );

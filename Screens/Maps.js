@@ -32,8 +32,10 @@ export default function MapScreen({route, navigation}) {
       headers: myHeadersGET
     }
 
+    //api url
     const apiUrl = 'https://stud.hosted.hr.nl/0999525/boba_marker_locations.json'
 
+    //fetch api
     const loadJSON = () => {
       fetch(apiUrl, myInitGET)
       .then(res => res.json())
@@ -41,12 +43,15 @@ export default function MapScreen({route, navigation}) {
       .catch(error => console.log(error))
     }
 
+    //put markers in useState markers array that uv made before
     function updateData(data){
       setMarkers(data)
     }
 
+    //use effect to initiate ur fetch 
     useEffect(() => {loadJSON()}, [])
 
+    //use effect for different ways to handle
     useEffect(() => {
       //when pressing the map tab on navbar, show current location
       navigation.addListener('tabPress', (e) => {
@@ -92,9 +97,9 @@ export default function MapScreen({route, navigation}) {
       })();
     }, []);
   
-    let text = 'Waiting...';
+    let text = 'please give us a moment to find ur location...';
     if (location == null) {
-        text = errorMsg;
+        text = text;
     } else {
         text = "Location Found"
     }
@@ -104,17 +109,11 @@ export default function MapScreen({route, navigation}) {
       <Text style={styles.text}>{text}</Text>        
       <MapView style={styles.map}
       showsUserLocation
-      region={ region
-        //it takes a while for user location to load so we write an if statement
-        //if user location is loaded, set user coords, else a hardcoded coord
-        // latitude: location ? location.coords.latitude : 51.901241339389706,
-        // longitude: location ? location.coords.longitude : 4.261946355786722,
-        // latitudeDelta: 0.00922,
-        // longitudeDelta: 0.00421, 
-      }>
+      region={ region}>
         {//map through all marker locations
         markers.map((marker, index) => (
-        <Marker coordinate={{ latitude : marker.lat , longitude : marker.long }} key={marker.name} image={myMarker}/>
+        <Marker coordinate={{ latitude : marker.lat , longitude : marker.long }} key={marker.name} image={myMarker} 
+          onPress={ ()=> navigation.navigate("Notes", {"marker": marker})}/>
         ))}
       </MapView>    
       </View>
