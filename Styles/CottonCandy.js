@@ -23,6 +23,24 @@ export default StyleSheet.create({
       width: Dimensions.get('window').width,
       height: Dimensions.get('window').height,
    },
+   userPosButton: {
+      position: 'absolute', 
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: 'white',
+      borderRadius: 50/2,
+      width: 50,
+      height: 50,
+      top: 35, 
+      right: 20,
+      shadowOffset: {
+         width: 0,
+         height: 1,
+      },
+      shadowOpacity: 0.36,
+      shadowRadius: 6.68,
+      elevation: 7,
+   },
    item: {
       backgroundColor: '#D8E2DC',
       alignItems: 'center',
@@ -44,8 +62,12 @@ export default StyleSheet.create({
       borderRadius: 10,
       padding: 10,
    },
-   msg: {
-      fontSize: 18,
+   statusMsg: {
+      backgroundColor: 'white',
+      position: 'absolute',
+      width: Dimensions.get('window').width,
+      top: 0,
+      fontSize: 15,
       textAlign: 'center',
     },
 });
