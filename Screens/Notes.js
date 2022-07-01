@@ -10,6 +10,7 @@ export default function SettingsScreen({currentTheme, route}) {
    const [text, setText] = useState("")   //useState for text input for notes
    const [notes, setNotes] = useState([]) //usestate for all notes as an array
    const [name, setName] = useState(route.params?.marker.name) //useState for marker name
+   const [editedNote, setEditedNote] = useState()
 
    let style
 
@@ -26,7 +27,7 @@ export default function SettingsScreen({currentTheme, route}) {
          if (notes !== null) {
             setNotes(JSON.parse(storedNotes))
          } else {
-
+            
          }
       } catch (err) {
          console.log(err)
@@ -44,15 +45,41 @@ export default function SettingsScreen({currentTheme, route}) {
       }
    }
 
+   //function returns a random int for an id
+   const randomId = () => {
+      return Math.floor((Math.random() * 10000) + 1000).toString()
+   }
+
    //function to submit a note
    const submitNote = (text) => {
       if(text !== ""){
-         setNotes([{ "id": Math.random().toString(), "name": name, "note": text}, ...notes]) 
+         setNotes([{ "id": randomId(), "name": name, "note": text}, ...notes]) 
       } 
    }
 
-   const editNote = (name, text) => {
-      console.log(name, text)
+   //function to set states so we can start editing note
+   const editNote = (id, text) => {
+      setText(text)
+      setEditedNote(id)
+   }
+
+   //function to submit edit
+   const submitEdit = () => {
+      if(editedNote){
+         //put notes in a new var
+         let noteCopy = notes
+         //search index of the note id we r going to edit
+         let searchIndex = noteCopy.findIndex(note => note.id == editedNote)
+         //set new text
+         noteCopy[searchIndex].note = text
+
+         //save edited note
+         setNotes([...noteCopy])
+
+         //reset the state
+         setEditedNote(null)
+         setText("")
+      } 
    }
 
    //function to delete a note
@@ -88,37 +115,48 @@ export default function SettingsScreen({currentTheme, route}) {
    // Create the notes for the flatlist
    const Note = ({ text, name, id }) => (
       <View style={style.item}>
-         <TouchableOpacity onPress={editNote(name, text)}>
+         {/* longpress to edit a note */}
+         <TouchableOpacity onLongPress={ ()=> shareNote(name, text)}>
             <Text style={style.name}>{ [name, ": "] }</Text>
             <Text style={style.name}>{ text }</Text>
          </TouchableOpacity>
-            <Ionicons
-               name="close-circle"
-               color= "#9D8189"
-               size={25}
-               onPress={() => deleteNote(id)} />
-            <Ionicons 
-               name="share-outline"
-               color= "#9D8189"
-               size={25}
-               onPress={() => shareNote(name, text)}/>
+         <Ionicons
+            name="close-circle"
+            color= "#9D8189"
+            size={25}
+            onPress={() => deleteNote(id)} />
+         <Ionicons 
+            name="create"
+            color= "#9D8189"
+            size={25}
+            onPress={() => editNote(id, text)}/>
       </View>
    );
- 
+
    const renderNote = ({ item }) => <Note id={item.id} name={item.name} text={item.note} />
 
    return (
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
          <SafeAreaView style={style.container}>
+
+            {/* Button to delete all notes when theyre somehow hidden
+            <Button title="delete all notes" onPress={() => {
+               setNotes([])
+            }} /> */}
+
             <Text style={style.h1}>Leave a note!</Text>
             <TextInput
             style={style.input}
             onChangeText={setText}
             value={text}
             />
-            <Button title="Add Note" onPress={() => {
-               submitNote(text)
-            }} />
+
+            {/* if statements to switch types of buttons */}
+            <Button title={ editedNote ? "Save Note" : "Add Note" } 
+            onPress={ editedNote ? ( () => submitEdit() ) : ( () => { submitNote(text) }) } />
+
+            {/* <Button title="Add Note" onPress={() => { submitNote(text) }} /> */}
+
             <FlatList
                data={notes}
                renderItem={renderNote}
